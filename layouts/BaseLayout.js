@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Layout } from "antd";
 
 import Navigation from "./Navigation";
-import { baseline } from "../theme/themeFunctions";
+import { baseline, breakpoints } from "../theme/themeFunctions";
 
 const Root = styled.div`
 	display: block;
@@ -13,12 +13,24 @@ const Root = styled.div`
 `;
 
 const TitleSection = styled.div`
-	padding: ${baseline(3)};
+	padding: ${baseline(2)};
 	background-color: #1d1d1d;
+
+	@media ${breakpoints.medium} {
+		padding: ${baseline(3)};
+	}
 `;
 
-const Title = styled.h1`
-	text-transfrom: uppercase;
+const Title = styled.h2`
+	text-transform: uppercase;
+`;
+
+const Content = styled.div`
+	padding: ${baseline(2)};
+
+	@media ${breakpoints.medium} {
+		padding: ${baseline(3)};
+	}
 `;
 
 const container = {
@@ -52,7 +64,7 @@ const BaseLayout = props => {
 						</Title>
 						<p>{description}</p>
 					</TitleSection>
-					{children}
+					<Content>{children}</Content>
 				</motion.div>
 			</Layout>
 		</Root>
