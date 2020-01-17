@@ -1,0 +1,20 @@
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"dzannotti.vscode-babel-coloring",
+		"EditorConfig.EditorConfig",
+		"flowtype.flow-for-vscode",
+		"streetsidesoftware.code-spell-checker",
+		"ue.alphabetical-sorter",
+		"formulahendry.auto-rename-tag",
+		"eamodio.gitlens",
+		"christian-kohler.path-intellisense",
+		"chakrounanas.turbo-console-log",
+		"ms-vscode.go",
+		"lsadam0.reactflowsnippets",
+		"ybaumes.highlight-trailing-white-spaces",
+		"jpoissonnier.vscode-styled-components",
+		"ms-azuretools.vscode-docker",
+		"shinnn.stylelint"
+	]
+}

@@ -1,0 +1,97 @@
+{
+	"extends": ["airbnb", "plugin:prettier/recommended"],
+	"parser": "babel-eslint",
+	"env": {
+		"browser": true
+	},
+	"globals": {},
+	"rules": {
+		"curly": [
+			2,
+			"all"
+		], // curly brackets for all statements
+		"comma-dangle": [
+			2,
+			"never"
+		], // no trailing commas
+		"id-length": 0, // name your variables whatever you want
+		"no-tabs": 0,
+		// ideally this would be [2, "nofunc"] but that causes linting to exception
+		"no-use-before-define": [0], // allow functions to be underneath their caller
+		"space-before-function-paren": [0], // allow no space before export default function()
+		"spaced-comment": [
+			2,
+			"always",
+			{
+				"markers": [":", "flow-include"]
+			}
+		],
+		"newline-before-return": 2,
+		"no-unused-vars": [
+			2,
+			{
+				"varsIgnorePattern": "^_$"
+			}
+		],
+		"no-restricted-globals": 0,
+		"no-underscore-dangle": 0,
+		"no-duplicate-imports": 0,
+		"no-plusplus": 0,
+		"import/no-cycle": 0,
+		"import/no-named-as-default": 0,
+		"import/prefer-default-export": 0,
+		"react/jsx-indent": 0, // We're using Prettier indent over ESLint
+		"react/jsx-indent-props": [2, "tab"],
+		"react/jsx-filename-extension": [
+			1,
+			{
+				"extensions": [".js"]
+			}
+		],
+		"react/no-multi-comp": 0,
+		"react/sort-comp": 0,
+		"react/prop-types": 0,
+		"react/jsx-no-bind": 0,
+		"react/no-unused-prop-types": 0,
+		"react/require-default-props": 0,
+		"react/prefer-stateless-function": 0,
+		"react/destructuring-assignment": 0,
+		// "react/button-has-type": 0, // BUG does not allow for dynamic assignment see: https://github.com/yannickcr/eslint-plugin-react/issues/1555
+		"react/jsx-props-no-spreading": 0,
+		"react/state-in-constructor": 0,
+		"react/static-property-placement": 0,
+		"react/jsx-fragments": 0,
+		"react/jsx-curly-newline": 0,
+		"react/jsx-wrap-multilines": 0,
+		"react/default-props-match-prop-types": 0,
+		"max-classes-per-file": 0,
+		"object-shorthand": 2,
+		"prefer-object-spread": 0,
+		"arrow-body-style": 0,
+		"arrow-parens": [2, "as-needed"],
+		"constructor-super": 2,
+		"no-this-before-super": 2,
+		"object-curly-newline": 0,
+		"prefer-destructuring": 0,
+		"jsx-a11y/anchor-is-valid": 0,
+		"jsx-a11y/media-has-caption": 0,
+		"jsx-a11y/click-events-have-key-events": 0,
+		"jsx-a11y/label-has-associated-control": [
+			2,
+			{
+				"labelComponents": [],
+				"labelAttributes": [],
+				"controlComponents": ["Checkbox"],
+				"depth": 3
+			}
+		],
+		"jsx-a11y/label-has-for": [
+			2,
+			{
+				"required": {
+					"every": ["id"]
+				}
+			}
+		]
+	}
+}

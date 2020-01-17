@@ -1,0 +1,188 @@
+{
+	/*
+        // Place your snippets for JavaScript here. Each snippet is defined under a snippet name and has a prefix, body and 
+        // description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+        // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+        // same ids are connected.
+        // Example:
+        "Print to console": {
+                "prefix": "log",
+                "body": [
+                        "console.log('$1');",
+                        "$2"
+                ],
+                "description": "Log output to console"
+        }
+*/
+	"Print to console": {
+		"prefix": "clg",
+		"body": [
+			"console.log('$1');",
+			"$2"
+		],
+		"description": "Log output to console"
+	},
+	"React class": {
+		"prefix": "rcc",
+		"body": [
+			"/* @flow */",
+			"import React, { Component } from \"react\";",
+			"",
+			"type ${1:ComponentName}Props = {};",
+			"",
+			"class ${1:ComponentName} extends Component<${1:ComponentName}Props> {",
+			"\trender() {",
+			"\t\treturn (",
+			"\t\t\t<div />$0",
+			"\t\t);",
+			"\t}",
+			"}",
+			"",
+			"export default ${1:ComponentName};"
+		],
+		"description": "react class component"
+	},
+	"Spec file - component": {
+		"prefix": "jsc",
+		"body": [
+			"import React from \"react\";",
+			"import sinon from \"sinon\";",
+			"import { expect } from \"chai\";",
+			"",
+			"import ${1:ComponentName} from \"${2:PathToComponent}/${1:ComponentName}\";",
+			"import shouldRender from \"../../helpers/shouldRender\";",
+			"import { shallowWithIntl as shallow } from \"../../helpers/intlEnzymeTestHelper\";",
+			"",
+			"describe.only(\"${3:SpecName}::${1:ComponentName}\", () => {",
+			"\tconst setup = (propsOverrides = {}) => {",
+			"\t\tconst props = {",
+			"\t\t\t...propsOverrides",
+			"\t\t};",
+			"",
+			"\t\tconst wrapper = () => shallow(<${1:ComponentName} {...props} />);",
+			"",
+			"\t\treturn {",
+			"\t\t\twrapper",
+			"\t\t};",
+			"\t};",
+			"",
+			"\tdescribe(\"renders:\", () => {",
+			"\t\tshouldRender([])(setup);",
+			"\t\t$0",
+			"\t});",
+			"",
+			"\tdescribe(\"actions:\", () => {",
+			"\t});",
+			"});",
+			""
+		],
+		"description": "Spec file for a React component"
+	},
+	"Spec File - component exists assertion": {
+		"prefix": "jse",
+		"body": [
+			"expect(${1:componentName}().exists()).to.equal(${2:boolean});"
+		]
+	},
+	"Spec file - selectors": {
+		"prefix": "jss",
+		"body": [
+			"import { expect } from \"chai\";",
+			"",
+			"import shouldRecomputeSelector from \"../helpers/shouldRecomputeSelector\";",
+			"import { $2 } from \"$1\";",
+			"",
+			"describe(\"$3\", () => {",
+			"\tconst setup = () => {",
+			"\t\tconst props = {",
+			"\t\t};",
+			"",
+			"\t\tconst baseState = {",
+			"\t\t};",
+			"",
+			"\t\tconst newState = {",
+			"\t\t};",
+			"",
+			"\t\treturn {",
+			"\t\t\tbaseState,",
+			"\t\t\tnewState,",
+			"\t\t\tprops,",
+			"\t\t\t$2",
+			"\t\t};",
+			"\t};",
+			"",
+			"\tdescribe(\"$2:\", () => {",
+			"\t\t$0",
+			"\t});",
+			"",
+			"\tdescribe(\"recomputations:\", () => {",
+			"\t\tshouldRecomputeSelector([\"$2\"])(setup);",
+			"\t});",
+			"});",
+			""
+		]
+	},
+	"Spec File - utilities": {
+		"prefix": "jsu",
+		"body": [
+			"import { expect } from \"chai\";",
+			"",
+			"import { ${2:utilityName} } from \"${1:path}\";",
+			"",
+			"describe.only(\"${3:block}\", () => {",
+			"\tconst setup = () => {",
+			"",
+			"\t\treturn {}",
+			"\t};",
+			"",
+			"\tdescribe(\"${2:utilityName}\", () => {",
+			"\t\t$0",
+			"\t});",
+			"});",
+			""
+		],
+		"description": "Spec file for Utilities"
+	},
+	"Middleware": {
+		"prefix": "jmw",
+		"body": [
+			"/* @flow */",
+			"import type { MiddlewareStore } from \"../app/redux/types\";",
+			"",
+			"type ${2:TypeName} = (middlewareParams: MiddlewareStore) => (next: () => void) => (action: Object) => void",
+			"const ${1:middlewareName}: ${2:TypeName} = ({ dispatch, getState }) => next => action => {",
+			"\treturn next(action);",
+			"};",
+			"",
+			"export default ${1:middlewareName};",
+			""
+		]
+	},
+	"Storybook": {
+		"prefix": "jsb",
+		"body": [
+			"import React from \"react\";",
+			"import { storiesOf } from \"@storybook/react\";",
+			"",
+			"import ${1:ComponentName} from \"${2:PathToStory}/${1:ComponentName}\";",
+			"import defaultDecorator from \"../../helpers/defaultDecorator\";",
+			"",
+			"const stories = storiesOf(\"${3:Story name}.${1:ComponentName}\", module);",
+			"",
+			"defaultDecorator(stories, {",
+			"\tisHostEnabled: true,",
+			"\thostOverrides: {",
+			"\t\twidth: \"100%\"",
+			"\t}",
+			"});",
+			"",
+			"stories.add(\"default\", () => {",
+			"\treturn (",
+			"\t\t<${1:ComponentName} />",
+			"\t);",
+			"});",
+			""
+		],
+		"description": "Storybook file for Jumbo."
+	}
+}

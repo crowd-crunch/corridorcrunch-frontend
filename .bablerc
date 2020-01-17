@@ -1,0 +1,7 @@
+{
+	"presets": [
+		"next/babel",
+		"airbnb"
+	],
+	"plugins": [["import", {"libraryName": "antd", "style": true}]]
+}
