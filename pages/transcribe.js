@@ -62,7 +62,7 @@ const Actions = styled.div`
 	@media ${breakpoints.medium} {
 		flex-direction: row;
 	}
-`
+`;
 
 // Mocking the image data from an API until this is able hooked up
 const MockImageData = {
@@ -108,20 +108,28 @@ const Transcribe = () => {
 						</Card>
 					</Col>
 				</ContentRow>
-				<ContentRow type="flex"gutter={[16, { xs: 8, sm: 16, md: 24, lg: 36 }]}>
+				<ContentRow type="flex" gutter={[16, { xs: 8, sm: 16, md: 24, lg: 36 }]}>
 					<Col sm={24} lg={12}>
 						<h3>Image Inversion</h3>
 						<p>Having trouble seeing the sequence. Try the inversion slider below:</p>
 						<InversionSlider>
 							<Icon type="sliders" theme="filled" style={{ paddingRight: baseline(1) }} />
-							<Slider style={{width: "100%", maxWidth: "400px" }} defaultValue={inversion} min={0} max={1} step={0.1} onChange={setInversion} tooltipVisible />
+							<Slider
+								style={{ width: "100%", maxWidth: "400px" }}
+								defaultValue={inversion}
+								min={0}
+								max={1}
+								step={0.1}
+								onChange={setInversion}
+								tooltipVisible
+							/>
 						</InversionSlider>
 					</Col>
 					<Col sm={24} lg={12}>
 						<h3>Additional Actions</h3>
 						<Actions>
-							<Button>Display New Image</Button>
-							<Button>Report Current Image</Button>
+							<Button type="primary">Display New Image</Button>
+							<Button type="negative">Report Current Image</Button>
 						</Actions>
 					</Col>
 				</ContentRow>
