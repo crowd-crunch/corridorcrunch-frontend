@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { Button as CoreButton } from "antd";
 
-import { baseline } from "../../theme/themeFunctions";
+import { baseline, breakpoints } from "../../theme/themeFunctions";
 
 const Root = styled(CoreButton)`
 	border-radius: 0;
@@ -16,6 +16,7 @@ const Root = styled(CoreButton)`
 	text-transform: uppercase;
 	font-weight: 600;
 	transition: none;
+	margin: ${baseline(1)} 0;
 
 	:active,
 	:focus,
@@ -23,6 +24,14 @@ const Root = styled(CoreButton)`
 		background-color: #b78c25;
 		color: #d2d2d2;
 		border-color: #fefefe;
+	}
+
+	@media ${breakpoints.medium} {
+		margin: 0;
+
+		:not(:first-of-type) {
+			margin-left: ${baseline(1)};
+		}
 	}
 `;
 

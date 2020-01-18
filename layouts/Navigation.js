@@ -51,7 +51,7 @@ const Navigation = () => {
 			<NavMenuColumn sm={4} md={12} lg={12}>
 				<NavMenu onClick={setSelectedItem} selectedKeys={[selectedItem]} mode="horizontal">
 					<Menu.Item key="transcribe">
-						<Link href="transcribe">
+						<Link href="/transcribe">
 							<span>
 								<Icon type="radar-chart" />
 								Transcribe
@@ -59,7 +59,7 @@ const Navigation = () => {
 						</Link>
 					</Menu.Item>
 					<Menu.Item key="submit">
-						<Link href="submit">
+						<Link href="/submit">
 							<span>
 								<Icon type="picture" />
 								Submit
