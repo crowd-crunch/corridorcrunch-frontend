@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import { Col, Row, Icon, Input, Slider } from "antd";
@@ -105,6 +105,8 @@ const MockImageData = {
 };
 
 const Transcribe = () => {
+	const [data, setData] = useState();
+	const [loading, setLoading] = useState(true);
 	const [inversion, setInversion] = useState(0);
 	const [additionalFlags, setAdditionalFlags] = useState({
 		badQuality: false,
@@ -125,19 +127,24 @@ const Transcribe = () => {
 		return errors;
 	};
 
+	const onSubmit = values => {
+		const body = {
+			sequence: values.sequence,
+			badQuality: additionalFlags.badQuality,
+			isRotated: additionalFlags.isRotated
+		};
+		fetch("/api/image", { body, method: "POST" })
+			.then(res => res.json())
+			.then(console.log)
+			.catch(console.log);
+	};
+
 	const formik = useFormik({
 		initialValues: {
 			sequence: ""
 		},
 		validate,
-		onSubmit: values => {
-			const JSON = {
-				sequence: values.sequence,
-				badQuality: additionalFlags.badQuality,
-				isRotated: additionalFlags.isRotated
-			};
-			console.log(JSON);
-		}
+		onSubmit
 	});
 
 	const handleCheckFlag = e => {
@@ -147,6 +154,19 @@ const Transcribe = () => {
 
 	const isChecked = type => additionalFlags[type];
 	const { TextArea } = Input;
+
+	const fetchImage = () => {
+		setLoading(true);
+		fetch("/api/image")
+			.then(res => res.json())
+			.then(setData)
+			.then(() => setLoading(false))
+			.catch(console.log);
+	};
+
+	useEffect(() => {
+		fetchImage();
+	}, []);
 
 	return (
 		<div>
@@ -268,16 +288,25 @@ const Transcribe = () => {
 						<Divider />
 						<h3>Additional Actions</h3>
 						<Actions>
-							<Button type="primary">Display New Image</Button>
+							<Button type="primary" onClick={fetchImage}>
+								Display New Image
+							</Button>
 							<Button type="negative">Report Current Image</Button>
 						</Actions>
 					</Col>
 				</ContentRow>
 				<ContentRow>
 					<Col lg={24}>
-						<ImageWrapper>
-							<Image inversion={inversion} src={MockImageData.url} alt="" />
-						</ImageWrapper>
+						{!loading && (
+							<a target="_blank" rel="noopener noreferrer" href={data.url}>
+								{data.url}
+							</a>
+						)}
+						{!loading && (
+							<ImageWrapper>
+								<Image inversion={inversion} src={data.url} alt="" />
+							</ImageWrapper>
+						)}
 					</Col>
 				</ContentRow>
 			</BaseLayout>

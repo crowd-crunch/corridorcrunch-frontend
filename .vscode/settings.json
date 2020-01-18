@@ -2,5 +2,8 @@
 	"javascript.validate.enable": false,
 	"eslint.autoFixOnSave": true,
 	"editor.formatOnSave": false,
-	"eslint.packageManager": "yarn"
+	"eslint.packageManager": "yarn",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	}
 }
