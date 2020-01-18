@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { baseline, breakpoints } from "../../theme/themeFunctions";
+import { baseline } from "../../theme/themeFunctions";
 
 const CardTypes = {
 	common: "#3A5630",
@@ -17,7 +17,6 @@ const Root = styled.div`
 const CardHeader = styled.div`
 	padding: ${baseline(1)};
 	border-top: 2px solid #d2d2d2;
-	/* background: #281934; */
 	background: ${props => CardTypes[props.type]};
 `;
 

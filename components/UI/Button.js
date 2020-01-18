@@ -56,11 +56,12 @@ const Root = styled(CoreButton)`
 `;
 
 const Button = props => {
-	const { children, to, onClick, type = "primary" } = props;
+	const { children, to, onClick, type = "primary", htmlType = "button" } = props;
+	const content = to ? <Link href={to}>{children}</Link> : children;
 
 	return (
-		<Root onClick={onClick} type={type}>
-			<Link href={to}>{children}</Link>
+		<Root onClick={onClick} type={type} htmlType={htmlType}>
+			{content}
 		</Root>
 	);
 };

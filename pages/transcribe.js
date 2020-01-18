@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Col, Row, Icon, Slider } from "antd";
+import Link from "next/link";
 import styled from "styled-components";
+import { Col, Row, Icon, Input, Slider } from "antd";
+import { useFormik } from "formik";
 
 import BaseLayout from "../layouts/BaseLayout";
 import Button from "../components/UI/Button";
+import CheckboxButton from "../components/UI/CheckboxButton";
 import Card from "../components/UI/Card";
+import Divider from "../components/UI/Divider";
 
 import { baseline, breakpoints } from "../theme/themeFunctions";
 
@@ -31,6 +35,7 @@ const ListItem = styled.div`
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	margin: ${baseline(1)} 0;
 
 	@media ${breakpoints.medium} {
 		width: 50%;
@@ -64,6 +69,32 @@ const Actions = styled.div`
 	}
 `;
 
+const GutteredRow = styled(Row)`
+	margin-bottom: ${baseline(2)};
+`;
+
+const ListIconWrapper = styled.span`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+`;
+
+const ListIcon = styled(Icon)`
+	font-size: 1.8rem;
+	margin-right: ${baseline(1)};
+`;
+
+const Label = styled.label`
+	font-weight: 600;
+	font-size: 0.75rem;
+`;
+
+const ValidationMessage = styled.div`
+	color: #a62935;
+	min-height: ${baseline(2)};
+	margin-bottom: ${baseline(-2)};
+`;
+
 // Mocking the image data from an API until this is able hooked up
 const MockImageData = {
 	id: "0037",
@@ -75,6 +106,47 @@ const MockImageData = {
 
 const Transcribe = () => {
 	const [inversion, setInversion] = useState(0);
+	const [additionalFlags, setAdditionalFlags] = useState({
+		badQuality: false,
+		isRotated: false
+	});
+
+	const isValidJSON = jsonString =>
+		!/[^,:{}[\]0-9.\-+Eaeflnr-u \n\r\t]/.test(jsonString.replace(/"(\\.|[^"\\])*"/g, ""));
+
+	const validate = values => {
+		const errors = {};
+		if (!values.sequence) {
+			errors.sequence = "This field is required";
+		} else if (!isValidJSON(values.sequence)) {
+			errors.sequence = "Invalid JSON schema, please check your sequence and try again.";
+		}
+
+		return errors;
+	};
+
+	const formik = useFormik({
+		initialValues: {
+			sequence: ""
+		},
+		validate,
+		onSubmit: values => {
+			const JSON = {
+				sequence: values.sequence,
+				badQuality: additionalFlags.badQuality,
+				isRotated: additionalFlags.isRotated
+			};
+			console.log(JSON);
+		}
+	});
+
+	const handleCheckFlag = e => {
+		const paymentType = e.target.value;
+		setAdditionalFlags({ ...additionalFlags, [paymentType]: !additionalFlags[paymentType] });
+	};
+
+	const isChecked = type => additionalFlags[type];
+	const { TextArea } = Input;
 
 	return (
 		<div>
@@ -83,32 +155,101 @@ const Transcribe = () => {
 					<Col sm={24} lg={12}>
 						<Card title="A strange sequence" description="Quest Step" type="legendary">
 							<ul>
-								<li>Transcribe the image below using https://tjl.co/corridors-of-time/</li>
-								<li>Copy and paste the RAW JSON output from tjl.co into the box below and click submit</li>
+								<li>
+									<span>Transcribe the image below using </span>
+									<a href="https://tjl.co/corridors-of-time/" target="_blank" rel="noopener noreferrer">
+										https://tjl.co/corridors-of-time/
+									</a>
+								</li>
+								<li>{`Copy and paste the RAW JSON output from tjl.co into the box below and click submit. The raw JSON is everything between the { and } curly brackets, including those brackets themselves.`}</li>
+								<li>
+									All puzzle pieces should be transcribed as they appear when the room's entrance is behind the player.
+									You can easily verify the image rotation by using the outer pillars as landmarks. [See this rotation
+									landmarks guide]
+								</li>
 							</ul>
 						</Card>
 					</Col>
 					<Col sm={24} lg={12}>
 						<Card title="A piece of the puzzle" description={`Sequence #${MockImageData.id}`} type="common">
-							<p>Current sequence information</p>
+							<p>Current sequence information:</p>
 							<ListItem>
-								<span>
-									<Icon type="safety-certificate" theme="filled" style={{ paddingRight: baseline(1) }} />
+								<ListIconWrapper>
+									<ListIcon type="safety-certificate" theme="filled" style={{ paddingRight: baseline(1) }} />
 									<ListItemTitle>Confidence Score:</ListItemTitle>
-								</span>
+								</ListIconWrapper>
 								<strong>{`${MockImageData.confidenceScore}%`}</strong>
 							</ListItem>
 							<ListItem>
-								<span>
-									<Icon type="eye" theme="filled" style={{ paddingRight: baseline(1) }} />
+								<ListIconWrapper>
+									<ListIcon type="eye" theme="filled" style={{ paddingRight: baseline(1) }} />
 									<ListItemTitle>Total Transcriptions:</ListItemTitle>
-								</span>
+								</ListIconWrapper>
 								<strong>{`${MockImageData.totalTranscriptions}`}</strong>
 							</ListItem>
 						</Card>
 					</Col>
 				</ContentRow>
 				<ContentRow type="flex" gutter={[16, { xs: 8, sm: 16, md: 24, lg: 36 }]}>
+					<Col sm={24} lg={12}>
+						<h3>Submit Sequence</h3>
+						<form onSubmit={formik.handleSubmit}>
+							<GutteredRow type="flex">
+								<Col span={24}>
+									<Label htmlFor="sequence">JSON Sequence</Label>
+									<TextArea
+										rows={4}
+										type="text"
+										name="sequence"
+										placeholder="JSON Sequence"
+										onChange={formik.handleChange}
+										value={formik.values.sequence}
+									/>
+									<ValidationMessage>
+										{formik.touched.sequence && formik.errors.sequence ? <div>{formik.errors.sequence}</div> : null}
+									</ValidationMessage>
+								</Col>
+							</GutteredRow>
+							<GutteredRow
+								type="flex"
+								align="middle"
+								justify="space-between"
+								gutter={[16, { xs: 8, sm: 16, md: 24, lg: 36 }]}
+							>
+								<Col sm={24} lg={12}>
+									<CheckboxButton
+										title="Flag Image Quality"
+										clickHandler={handleCheckFlag}
+										value="badQuality"
+										isChecked={isChecked("badQuality")}
+										iconType="flag"
+									>
+										If an image is blurry, covered, cropped off, too small, doesn't load, or is unreadable for any
+										reason, please click check this box before submitting the sequence.
+									</CheckboxButton>
+								</Col>
+								<Col sm={24} lg={12}>
+									<CheckboxButton
+										title="Flag Image Rotation"
+										clickHandler={handleCheckFlag}
+										value="isRotated"
+										isChecked={isChecked("isRotated")}
+										iconType="sync"
+									>
+										If an image is rotated incorrectly, and the correct rotation can be seen, please transcribe it and
+										check this box before submitting the sequence.
+									</CheckboxButton>
+								</Col>
+							</GutteredRow>
+							<GutteredRow>
+								<Col sm={24} lg={12}>
+									<Button type="primary" htmlType="submit">
+										Submit Sequence
+									</Button>
+								</Col>
+							</GutteredRow>
+						</form>
+					</Col>
 					<Col sm={24} lg={12}>
 						<h3>Image Inversion</h3>
 						<p>Having trouble seeing the sequence. Try the inversion slider below:</p>
@@ -124,8 +265,7 @@ const Transcribe = () => {
 								tooltipVisible
 							/>
 						</InversionSlider>
-					</Col>
-					<Col sm={24} lg={12}>
+						<Divider />
 						<h3>Additional Actions</h3>
 						<Actions>
 							<Button type="primary">Display New Image</Button>
