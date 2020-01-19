@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Col, Row, Icon, Input, Slider } from "antd";
 import { useFormik } from "formik";
@@ -136,12 +136,22 @@ const MockImageData = {
 	isFlagged: true
 };
 
+const defaultFlags = {
+	badQuality: false,
+	isRotated: false
+};
+
+const defaultData = {
+	confidences: [],
+	rotatedimages: [],
+	transCount: 0
+};
+
 const Transcribe = () => {
+	const [data, setData] = useState(defaultData);
+	const [loading, setLoading] = useState(true);
 	const [inversion, setInversion] = useState(0);
-	const [additionalFlags, setAdditionalFlags] = useState({
-		badQuality: false,
-		isRotated: false
-	});
+	const [additionalFlags, setAdditionalFlags] = useState(defaultFlags);
 
 	const isValidJSON = jsonString =>
 		!/[^,:{}[\]0-9.\-+Eaeflnr-u \n\r\t]/.test(jsonString.replace(/"(\\.|[^"\\])*"/g, ""));
@@ -157,19 +167,56 @@ const Transcribe = () => {
 		return errors;
 	};
 
+	const fetchImage = () => {
+		setLoading(true);
+		fetch("/api/image")
+			.then(res => res.json())
+			.then(setData)
+			.then(() => setLoading(false))
+			.catch(console.log);
+	};
+
+	const onSubmit = ({ sequence }, formikBag) => {
+		const s = JSON.parse(sequence);
+		const body = {
+			bad_image: additionalFlags.badQuality,
+			...(additionalFlags.isRotated && { orientation: "wrong" }),
+			puzzlePiece: data.id,
+			center: s.center,
+			wall1: s.walls[0],
+			wall2: s.walls[1],
+			wall3: s.walls[2],
+			wall4: s.walls[3],
+			wall5: s.walls[4],
+			wall6: s.walls[5],
+			link1: s.nodes[0].join(""),
+			link2: s.nodes[1].join(""),
+			link3: s.nodes[2].join(""),
+			link4: s.nodes[3].join(""),
+			link5: s.nodes[4].join(""),
+			link6: s.nodes[5].join("")
+		};
+		formikBag.setSubmitting(true);
+		fetch("/api/image", { body: JSON.stringify(body), method: "POST", headers: { "Content-Type": "application/json" } })
+			.then(res => res.json())
+			.then(() => {
+				formikBag.resetForm();
+				formikBag.setSubmitting(false);
+				setAdditionalFlags(defaultFlags);
+				setData(defaultData);
+				fetchImage();
+			})
+			.catch(() => {
+				formikBag.setSubmitting(false);
+			});
+	};
+
 	const formik = useFormik({
 		initialValues: {
 			sequence: ""
 		},
 		validate,
-		onSubmit: values => {
-			const JSON = {
-				sequence: values.sequence,
-				badQuality: additionalFlags.badQuality,
-				isRotated: additionalFlags.isRotated
-			};
-			console.log(JSON);
-		}
+		onSubmit
 	});
 
 	const handleCheckFlag = e => {
@@ -180,7 +227,13 @@ const Transcribe = () => {
 	const isChecked = type => additionalFlags[type];
 	const { TextArea } = Input;
 
-	const cardType = MockImageData.isFlagged ? "flag" : "common";
+	useEffect(() => {
+		fetchImage();
+	}, []);
+
+	const confidence = data.confidences.length && data.confidences[0] >= 5 ? `${data.confidences[0]}%` : "0%";
+
+	const cardType = data.rotatedimages.length ? "flag" : "common";
 
 	return (
 		<div>
@@ -211,21 +264,21 @@ const Transcribe = () => {
 						</Card>
 					</Col>
 					<Col sm={24} lg={12}>
-						<Card title="A piece of the puzzle" description={`Sequence #${MockImageData.id}`} type={cardType}>
+						<Card title="A piece of the puzzle" description={`Sequence #${data.id}`} type={cardType}>
 							<p>Current sequence information:</p>
 							<ListItem>
 								<ListIconWrapper>
 									<ListIcon type="safety-certificate" theme="filled" />
 									<ListItemTitle>Confidence Score:</ListItemTitle>
 								</ListIconWrapper>
-								<strong>{`${MockImageData.confidenceScore}%`}</strong>
+								{!loading && <strong>{confidence}</strong>}
 							</ListItem>
 							<ListItem>
 								<ListIconWrapper>
 									<ListIcon type="eye" theme="filled" />
 									<ListItemTitle>Total Transcriptions:</ListItemTitle>
 								</ListIconWrapper>
-								<strong>{`${MockImageData.totalTranscriptions}`}</strong>
+								<strong>{`${data.transCount}`}</strong>
 							</ListItem>
 							{MockImageData.isFlagged && (
 								<ListItem style={{ width: "100%" }}>
@@ -318,22 +371,26 @@ const Transcribe = () => {
 						<Divider />
 						<h3>Additional Actions</h3>
 						<Actions>
-							<Button type="primary">Display New Image</Button>
-							<Button type="negative">Report Current Image</Button>
+							<Button type="primary" onClick={fetchImage}>
+								Display New Image
+							</Button>
+							{false && <Button type="negative">Report Current Image</Button>}
 						</Actions>
 					</Col>
 				</ContentRow>
 				<ContentRow>
 					<Col lg={24}>
-						<ImageWrapper>
-							<ImageOverlay>
-								<LinkWrapper href={MockImageData.url} target="_blank" rel="noopener noreferrer">
-									<ListIcon type="zoom-in" />
-									View Larger Image
-								</LinkWrapper>
-							</ImageOverlay>
-							<Image inversion={inversion} src={MockImageData.url} alt="" />
-						</ImageWrapper>
+						{!loading && (
+							<ImageWrapper>
+								<ImageOverlay>
+									<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
+										<ListIcon type="zoom-in" />
+										View Larger Image
+									</LinkWrapper>
+								</ImageOverlay>
+								<Image inversion={inversion} src={data.url} alt="" />
+							</ImageWrapper>
+						)}
 					</Col>
 				</ContentRow>
 			</BaseLayout>
