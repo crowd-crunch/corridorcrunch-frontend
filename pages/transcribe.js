@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import styled from "styled-components";
 import { Col, Row, Icon, Input, Slider } from "antd";
 import { useFormik } from "formik";
@@ -104,14 +103,21 @@ const MockImageData = {
 	totalTranscriptions: 8
 };
 
+const defaultFlags = {
+	badQuality: false,
+	isRotated: false
+};
+
+const defaultData = {
+	confidences: [],
+	transCount: 0
+};
+
 const Transcribe = () => {
-	const [data, setData] = useState();
+	const [data, setData] = useState(defaultData);
 	const [loading, setLoading] = useState(true);
 	const [inversion, setInversion] = useState(0);
-	const [additionalFlags, setAdditionalFlags] = useState({
-		badQuality: false,
-		isRotated: false
-	});
+	const [additionalFlags, setAdditionalFlags] = useState(defaultFlags);
 
 	const isValidJSON = jsonString =>
 		!/[^,:{}[\]0-9.\-+Eaeflnr-u \n\r\t]/.test(jsonString.replace(/"(\\.|[^"\\])*"/g, ""));
@@ -127,16 +133,48 @@ const Transcribe = () => {
 		return errors;
 	};
 
-	const onSubmit = values => {
-		const body = {
-			sequence: values.sequence,
-			badQuality: additionalFlags.badQuality,
-			isRotated: additionalFlags.isRotated
-		};
-		fetch("/api/image", { body, method: "POST" })
+	const fetchImage = () => {
+		setLoading(true);
+		fetch("/api/image")
 			.then(res => res.json())
-			.then(console.log)
+			.then(setData)
+			.then(() => setLoading(false))
 			.catch(console.log);
+	};
+
+	const onSubmit = ({ sequence }, formikBag) => {
+		const s = JSON.parse(sequence);
+		const body = {
+			bad_image: additionalFlags.badQuality,
+			...(additionalFlags.isRotated && { orientation: "wrong" }),
+			puzzlePiece: data.id,
+			center: s.center,
+			wall1: s.walls[0],
+			wall2: s.walls[1],
+			wall3: s.walls[2],
+			wall4: s.walls[3],
+			wall5: s.walls[4],
+			wall6: s.walls[5],
+			link1: s.nodes[0].join(""),
+			link2: s.nodes[1].join(""),
+			link3: s.nodes[2].join(""),
+			link4: s.nodes[3].join(""),
+			link5: s.nodes[4].join(""),
+			link6: s.nodes[5].join("")
+		};
+		formikBag.setSubmitting(true);
+		fetch("/api/image", { body: JSON.stringify(body), method: "POST", headers: { "Content-Type": "application/json" } })
+			.then(res => res.json())
+			.then(() => {
+				formikBag.resetForm();
+				formikBag.setSubmitting(false);
+				setAdditionalFlags(defaultFlags);
+				setData(defaultData);
+				fetchImage();
+			})
+			.catch(() => {
+				formikBag.setSubmitting(false);
+			});
 	};
 
 	const formik = useFormik({
@@ -155,18 +193,11 @@ const Transcribe = () => {
 	const isChecked = type => additionalFlags[type];
 	const { TextArea } = Input;
 
-	const fetchImage = () => {
-		setLoading(true);
-		fetch("/api/image")
-			.then(res => res.json())
-			.then(setData)
-			.then(() => setLoading(false))
-			.catch(console.log);
-	};
-
 	useEffect(() => {
 		fetchImage();
 	}, []);
+
+	const confidence = data.confidences.length && data.confidences[0] >= 5 ? `${data.confidences[0]}%` : "0%";
 
 	return (
 		<div>
@@ -191,21 +222,21 @@ const Transcribe = () => {
 						</Card>
 					</Col>
 					<Col sm={24} lg={12}>
-						<Card title="A piece of the puzzle" description={`Sequence #${MockImageData.id}`} type="common">
+						<Card title="A piece of the puzzle" description={`Sequence #${data.id}`} type="common">
 							<p>Current sequence information:</p>
 							<ListItem>
 								<ListIconWrapper>
 									<ListIcon type="safety-certificate" theme="filled" style={{ paddingRight: baseline(1) }} />
 									<ListItemTitle>Confidence Score:</ListItemTitle>
 								</ListIconWrapper>
-								<strong>{`${MockImageData.confidenceScore}%`}</strong>
+								{!loading && <strong>{confidence}</strong>}
 							</ListItem>
 							<ListItem>
 								<ListIconWrapper>
 									<ListIcon type="eye" theme="filled" style={{ paddingRight: baseline(1) }} />
 									<ListItemTitle>Total Transcriptions:</ListItemTitle>
 								</ListIconWrapper>
-								<strong>{`${MockImageData.totalTranscriptions}`}</strong>
+								<strong>{`${data.transCount}`}</strong>
 							</ListItem>
 						</Card>
 					</Col>
