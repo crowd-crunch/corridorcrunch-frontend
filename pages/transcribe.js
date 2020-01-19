@@ -71,16 +71,21 @@ const ListItemTitle = styled.span`
 `;
 
 const Image = styled.img`
-	filter: ${props => `invert(${props.inversion}) contrast(${props.contrast}) contrast(${props.brightness})`};
+	filter: ${props => `invert(${props.inversion}) contrast(${props.contrast}%) brightness(${props.brightness})`};
 `;
 
-const InversionSlider = styled.div`
+const SliderWrapper = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	padding: ${baseline(2)} 0;
+	justify-content: space-between;
+	padding: ${baseline(1)} 0;
 	font-size: 1.8rem;
+
+	@media ${breakpoints.medium} {
+		max-width: 80%;
+	}
 `;
 
 const Actions = styled.div`
@@ -126,6 +131,10 @@ const ValidationMessage = styled.div`
 	margin-bottom: ${baseline(-2)};
 `;
 
+const SliderTitle = styled.h4`
+	margin-bottom: 0;
+`;
+
 const defaultFlags = {
 	badQuality: false,
 	isRotated: false
@@ -140,10 +149,9 @@ const defaultData = {
 const Transcribe = () => {
 	const [data, setData] = useState(defaultData);
 	const [loading, setLoading] = useState(true);
-	// const [brightness, contrast, inversion, setInversion, setBrightness, setContrast] = useState(0);
 	const [inversion, setInversion] = useState(0);
-	const [brightness, setBrightness] = useState(0);
-	const [contrast, setContrast] = useState(0);
+	const [brightness, setBrightness] = useState(1);
+	const [contrast, setContrast] = useState(100);
 	const [additionalFlags, setAdditionalFlags] = useState(defaultFlags);
 
 	const isValidJSON = jsonString =>
@@ -344,10 +352,6 @@ const Transcribe = () => {
 										<Button type="primary" htmlType="submit">
 											Submit Sequence
 										</Button>
-										<Button type="primary" onClick={fetchImage}>
-											Display New Image
-										</Button>
-										{false && <Button type="negative">Report Current Image</Button>}
 									</Actions>
 								</Col>
 							</GutteredRow>
@@ -357,8 +361,8 @@ const Transcribe = () => {
 						<h3>Image Filters</h3>
 						<p>Having trouble seeing the sequence? Try the sliders below:</p>
 
-						<InversionSlider>
-							<h3 style={{ paddingRight: baseline(1) }}>Inversion</h3>
+						<SliderWrapper>
+							<SliderTitle>Inversion</SliderTitle>
 							<Slider
 								style={{ width: "100%", maxWidth: "400px" }}
 								defaultValue={inversion}
@@ -367,30 +371,37 @@ const Transcribe = () => {
 								step={0.1}
 								onChange={setInversion}
 							/>
-						</InversionSlider>
-						<InversionSlider>
-							<h3 style={{ paddingRight: baseline(1) }}>Brightness</h3>
+						</SliderWrapper>
+						<SliderWrapper>
+							<SliderTitle>Brightness</SliderTitle>
 							<Slider
 								style={{ width: "100%", maxWidth: "400px" }}
 								defaultValue={brightness}
 								min={0}
-								max={1}
+								max={2}
 								step={0.1}
 								onChange={setBrightness}
 							/>
-						</InversionSlider>
-						<InversionSlider>
-							<h3 style={{ paddingRight: baseline(1) }}>Contrast</h3>
+						</SliderWrapper>
+						<SliderWrapper>
+							<SliderTitle>Contrast</SliderTitle>
 							<Slider
 								style={{ width: "100%", maxWidth: "400px" }}
 								defaultValue={contrast}
 								min={0}
-								max={1}
-								step={0.1}
+								max={200}
+								step={10}
 								onChange={setContrast}
 							/>
-						</InversionSlider>
+						</SliderWrapper>
 						<Divider />
+						<h3>Additional Actions</h3>
+						<Actions>
+							<Button type="primary" onClick={fetchImage}>
+								Display New Image
+							</Button>
+							{false && <Button type="negative">Report Current Image</Button>}
+						</Actions>
 					</Col>
 				</ContentRow>
 				<ContentRow>
