@@ -143,6 +143,7 @@ const defaultFlags = {
 
 const defaultData = {
 	confidences: [],
+	rotatedimages: [],
 	transCount: 0
 };
 
@@ -226,13 +227,13 @@ const Transcribe = () => {
 	const isChecked = type => additionalFlags[type];
 	const { TextArea } = Input;
 
-
 	useEffect(() => {
 		fetchImage();
 	}, []);
 
-	const confidence = data.conf
-	const cardType = MockImageData.isFlagged ? "flag" : "common";
+	const confidence = data.confidences.length && data.confidences[0] >= 5 ? `${data.confidences[0]}%` : "0%";
+
+	const cardType = data.rotatedimages.length ? "flag" : "common";
 
 	return (
 		<div>
@@ -373,26 +374,21 @@ const Transcribe = () => {
 							<Button type="primary" onClick={fetchImage}>
 								Display New Image
 							</Button>
-							<Button type="negative">Report Current Image</Button>
+							{false && <Button type="negative">Report Current Image</Button>}
 						</Actions>
 					</Col>
 				</ContentRow>
 				<ContentRow>
 					<Col lg={24}>
 						{!loading && (
-							<a target="_blank" rel="noopener noreferrer" href={data.url}>
-								{data.url}
-							</a>
-						)}
-						{!loading && (
-              <ImageWrapper>
-			  				<ImageOverlay>
-		  						<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
-		  							<ListIcon type="zoom-in" />
-			  						View Larger Image
-				  				</LinkWrapper>
-				  			</ImageOverlay>
-					  		<Image inversion={inversion} src={data.url} alt="" />
+							<ImageWrapper>
+								<ImageOverlay>
+									<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
+										<ListIcon type="zoom-in" />
+										View Larger Image
+									</LinkWrapper>
+								</ImageOverlay>
+								<Image inversion={inversion} src={data.url} alt="" />
 							</ImageWrapper>
 						)}
 					</Col>
