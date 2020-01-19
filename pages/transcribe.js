@@ -75,6 +75,7 @@ const Image = styled.img`
 `;
 
 const InversionSlider = styled.div`
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -292,7 +293,6 @@ const Transcribe = () => {
 								max={1}
 								step={0.1}
 								onChange={setInversion}
-								tooltipVisible
 							/>
 						</InversionSlider>
 						<Divider />
