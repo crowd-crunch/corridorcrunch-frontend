@@ -140,7 +140,6 @@ const defaultData = {
 const Transcribe = () => {
 	const [data, setData] = useState(defaultData);
 	const [loading, setLoading] = useState(true);
-	// const [brightness, contrast, inversion, setInversion, setBrightness, setContrast] = useState(0);
 	const [inversion, setInversion] = useState(0);
 	const [brightness, setBrightness] = useState(0);
 	const [contrast, setContrast] = useState(0);
