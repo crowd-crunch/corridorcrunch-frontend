@@ -209,7 +209,7 @@ const Transcribe = () => {
 
 	const formik = useFormik({
 		initialValues: {
-			sequence: ""
+			sequence: "{}"
 		},
 		validate,
 		onSubmit
@@ -303,6 +303,7 @@ const Transcribe = () => {
 										name="sequence"
 										placeholder="JSON Sequence"
 										onChange={formik.handleChange}
+										onFocus={ev => ev.target.select()}
 										value={formik.values.sequence}
 									/>
 									<ValidationMessage>
