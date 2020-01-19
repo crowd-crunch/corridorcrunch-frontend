@@ -35,7 +35,7 @@ const Footer = () => {
 		<Root type="flex" align="middle" justify="space-between">
 			<Col>
 				<IconWrapper>
-					Corridors of Time
+					Corridor Crunch
 					<FooterIcon type="copyright" />
 					2020
 				</IconWrapper>

@@ -27,7 +27,7 @@ const Home = () => {
 							The purpose of this site is to provide the most accurate database of puzzle piece transcriptions by
 							crowdsourcing the transcription process and verifying through redundancy.
 						</p>
-						<i> - Corridors of Time Team</i>
+						<i> - Corridor Crunch Team</i>
 					</Col>
 					<Col sm={{ span: 24 }} lg={{ span: 8 }}>
 						<p>Steps:</p>
