@@ -8,7 +8,7 @@ const Submit = () => {
 		<div>
 			<BaseLayout title="Submit">
 				<Row type="flex" justify="center">
-					Submit a new sequence
+					Image submission is still in development. Please keep transcribing until this is ready.
 				</Row>
 			</BaseLayout>
 		</div>

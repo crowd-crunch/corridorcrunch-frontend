@@ -59,16 +59,20 @@ const Navigation = () => {
 						</Link>
 					</Menu.Item>
 					<Menu.Item key="submit">
-						<Link href="/submit">
+						<a href="http://corridorcrunch.com/puzzlepieces/submit">
 							<span>
 								<Icon type="picture" />
 								Submit
 							</span>
-						</Link>
+						</a>
 					</Menu.Item>
 					<Menu.Item key="view">
-						<Icon type="eye" />
-						View All
+						<Link href="/legacy">
+							<span>
+								<Icon type="eye" />
+								View Legacy Site
+							</span>
+						</Link>
 					</Menu.Item>
 				</NavMenu>
 			</NavMenuColumn>

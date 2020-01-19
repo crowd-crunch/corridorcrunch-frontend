@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { baseline, breakpoints } from "../../theme/themeFunctions";
+import { baseline } from "../../theme/themeFunctions";
 
 const Root = styled.div`
 	margin-bottom: ${baseline(2)};
