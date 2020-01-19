@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Layout } from "antd";
 
 import Navigation from "./Navigation";
+import Footer from "./Footer";
 import { baseline, breakpoints } from "../theme/themeFunctions";
 
 const Root = styled.div`
@@ -30,6 +31,7 @@ const Content = styled.div`
 
 	@media ${breakpoints.medium} {
 		padding: ${baseline(3)};
+		margin-bottom: ${baseline(7)};
 	}
 `;
 
@@ -67,6 +69,7 @@ const BaseLayout = props => {
 					<Content>{children}</Content>
 				</motion.div>
 			</Layout>
+			<Footer />
 		</Root>
 	);
 };

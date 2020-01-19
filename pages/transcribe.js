@@ -22,10 +22,34 @@ const ContentRow = styled(Row)`
 `;
 
 const ImageWrapper = styled.div`
+	position: relative;
 	margin-top: ${baseline(1)};
 
 	@media ${breakpoints.medium} {
 		margin-top: 0;
+	}
+`;
+
+const ImageOverlay = styled.div`
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	z-index: 2;
+	background: rgba(0, 0, 0, 0.4);
+	border: 1px solid #d2d2d2;
+	border-top: none;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding: ${baseline(0.5)};
+
+	@media ${breakpoints.medium} {
+		width: 50%;
 	}
 `;
 
@@ -51,6 +75,7 @@ const Image = styled.img`
 `;
 
 const InversionSlider = styled.div`
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -76,6 +101,13 @@ const ListIconWrapper = styled.span`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+`;
+
+const LinkWrapper = styled.a`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
 `;
 
 const ListIcon = styled(Icon)`
@@ -215,8 +247,14 @@ const Transcribe = () => {
 								<li>{`Copy and paste the RAW JSON output from tjl.co into the box below and click submit. The raw JSON is everything between the { and } curly brackets, including those brackets themselves.`}</li>
 								<li>
 									All puzzle pieces should be transcribed as they appear when the room's entrance is behind the player.
-									You can easily verify the image rotation by using the outer pillars as landmarks. [See this rotation
-									landmarks guide]
+									You can easily verify the image rotation by using the outer pillars as landmarks.
+									<a
+										href="https://cdn.discordapp.com/attachments/667600349225287680/668240692916781096/unknown.png"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										[See this rotation landmarks guide]
+									</a>
 								</li>
 							</ul>
 						</Card>
@@ -226,14 +264,14 @@ const Transcribe = () => {
 							<p>Current sequence information:</p>
 							<ListItem>
 								<ListIconWrapper>
-									<ListIcon type="safety-certificate" theme="filled" style={{ paddingRight: baseline(1) }} />
+									<ListIcon type="safety-certificate" theme="filled" />
 									<ListItemTitle>Confidence Score:</ListItemTitle>
 								</ListIconWrapper>
 								{!loading && <strong>{confidence}</strong>}
 							</ListItem>
 							<ListItem>
 								<ListIconWrapper>
-									<ListIcon type="eye" theme="filled" style={{ paddingRight: baseline(1) }} />
+									<ListIcon type="eye" theme="filled" />
 									<ListItemTitle>Total Transcriptions:</ListItemTitle>
 								</ListIconWrapper>
 								<strong>{`${data.transCount}`}</strong>
@@ -313,7 +351,6 @@ const Transcribe = () => {
 								max={1}
 								step={0.1}
 								onChange={setInversion}
-								tooltipVisible
 							/>
 						</InversionSlider>
 						<Divider />
@@ -334,8 +371,14 @@ const Transcribe = () => {
 							</a>
 						)}
 						{!loading && (
-							<ImageWrapper>
-								<Image inversion={inversion} src={data.url} alt="" />
+              <ImageWrapper>
+			  				<ImageOverlay>
+		  						<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
+		  							<ListIcon type="zoom-in" />
+			  						View Larger Image
+				  				</LinkWrapper>
+				  			</ImageOverlay>
+					  		<Image inversion={inversion} src={data.url} alt="" />
 							</ImageWrapper>
 						)}
 					</Col>

@@ -14,7 +14,7 @@ const Root = styled.strong`
 const Logo = () => {
 	return (
 		<Link href="/">
-			<Root>Corridors of Time</Root>
+			<Root>Corridor Crunch</Root>
 		</Link>
 	);
 };
