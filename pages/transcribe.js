@@ -71,7 +71,7 @@ const ListItemTitle = styled.span`
 `;
 
 const Image = styled.img`
-	filter: ${props => `invert(${props.inversion})`};
+	filter: ${props => `invert(${props.inversion}) contrast(${props.contrast}) contrast(${props.brightness})`};
 `;
 
 const InversionSlider = styled.div`
@@ -140,7 +140,10 @@ const defaultData = {
 const Transcribe = () => {
 	const [data, setData] = useState(defaultData);
 	const [loading, setLoading] = useState(true);
+	// const [brightness, contrast, inversion, setInversion, setBrightness, setContrast] = useState(0);
 	const [inversion, setInversion] = useState(0);
+	const [brightness, setBrightness] = useState(0);
+	const [contrast, setContrast] = useState(0);
 	const [additionalFlags, setAdditionalFlags] = useState(defaultFlags);
 
 	const isValidJSON = jsonString =>
@@ -337,18 +340,25 @@ const Transcribe = () => {
 							</GutteredRow>
 							<GutteredRow>
 								<Col sm={24} lg={12}>
-									<Button type="primary" htmlType="submit">
-										Submit Sequence
-									</Button>
+									<Actions>
+										<Button type="primary" htmlType="submit">
+											Submit Sequence
+										</Button>
+										<Button type="primary" onClick={fetchImage}>
+											Display New Image
+										</Button>
+										{false && <Button type="negative">Report Current Image</Button>}
+									</Actions>
 								</Col>
 							</GutteredRow>
 						</form>
 					</Col>
 					<Col sm={24} lg={12}>
-						<h3>Image Inversion</h3>
-						<p>Having trouble seeing the sequence. Try the inversion slider below:</p>
+						<h3>Image Filters</h3>
+						<p>Having trouble seeing the sequence? Try the sliders below:</p>
+
 						<InversionSlider>
-							<Icon type="sliders" theme="filled" style={{ paddingRight: baseline(1) }} />
+							<h3 style={{ paddingRight: baseline(1) }}>Inversion</h3>
 							<Slider
 								style={{ width: "100%", maxWidth: "400px" }}
 								defaultValue={inversion}
@@ -358,14 +368,29 @@ const Transcribe = () => {
 								onChange={setInversion}
 							/>
 						</InversionSlider>
+						<InversionSlider>
+							<h3 style={{ paddingRight: baseline(1) }}>Brightness</h3>
+							<Slider
+								style={{ width: "100%", maxWidth: "400px" }}
+								defaultValue={brightness}
+								min={0}
+								max={1}
+								step={0.1}
+								onChange={setBrightness}
+							/>
+						</InversionSlider>
+						<InversionSlider>
+							<h3 style={{ paddingRight: baseline(1) }}>Contrast</h3>
+							<Slider
+								style={{ width: "100%", maxWidth: "400px" }}
+								defaultValue={contrast}
+								min={0}
+								max={1}
+								step={0.1}
+								onChange={setContrast}
+							/>
+						</InversionSlider>
 						<Divider />
-						<h3>Additional Actions</h3>
-						<Actions>
-							<Button type="primary" onClick={fetchImage}>
-								Display New Image
-							</Button>
-							{false && <Button type="negative">Report Current Image</Button>}
-						</Actions>
 					</Col>
 				</ContentRow>
 				<ContentRow>
@@ -378,7 +403,7 @@ const Transcribe = () => {
 										View Larger Image
 									</LinkWrapper>
 								</ImageOverlay>
-								<Image inversion={inversion} src={data.url} alt="" />
+								<Image inversion={inversion} brightness={brightness} contrast={contrast} src={data.url} alt="" />
 							</ImageWrapper>
 						)}
 					</Col>
