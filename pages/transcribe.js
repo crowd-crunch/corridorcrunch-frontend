@@ -132,7 +132,8 @@ const MockImageData = {
 	url:
 		"https://cdn.discordapp.com/attachments/666873697763590144/667306014680547339/tiger_release_final_20200116_165011.png",
 	confidenceScore: 70,
-	totalTranscriptions: 8
+	totalTranscriptions: 8,
+	isFlagged: true
 };
 
 const Transcribe = () => {
@@ -179,6 +180,8 @@ const Transcribe = () => {
 	const isChecked = type => additionalFlags[type];
 	const { TextArea } = Input;
 
+	const cardType = MockImageData.isFlagged ? "flag" : "common";
+
 	return (
 		<div>
 			<BaseLayout title="Transcribe" description="This is where we transcribe a corridors of time sequence">
@@ -208,7 +211,7 @@ const Transcribe = () => {
 						</Card>
 					</Col>
 					<Col sm={24} lg={12}>
-						<Card title="A piece of the puzzle" description={`Sequence #${MockImageData.id}`} type="common">
+						<Card title="A piece of the puzzle" description={`Sequence #${MockImageData.id}`} type={cardType}>
 							<p>Current sequence information:</p>
 							<ListItem>
 								<ListIconWrapper>
@@ -224,6 +227,17 @@ const Transcribe = () => {
 								</ListIconWrapper>
 								<strong>{`${MockImageData.totalTranscriptions}`}</strong>
 							</ListItem>
+							{MockImageData.isFlagged && (
+								<ListItem style={{ width: "100%" }}>
+									<ListIconWrapper>
+										<ListIcon type="flag" theme="filled" style={{ color: "#a62935" }} />
+										<ListItemTitle>
+											This sequence has been flagged for an incorrect orientation. Please pay extra attention to detail
+											when transcribing this sequence.
+										</ListItemTitle>
+									</ListIconWrapper>
+								</ListItem>
+							)}
 						</Card>
 					</Col>
 				</ContentRow>
