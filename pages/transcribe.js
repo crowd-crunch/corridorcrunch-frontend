@@ -120,6 +120,12 @@ const Label = styled.label`
 	font-size: 0.75rem;
 `;
 
+const Iframe = styled.iframe`
+	width: 100%;
+	height: 100%;
+	outline: none;
+`;
+
 const ValidationMessage = styled.div`
 	color: #a62935;
 	min-height: ${baseline(2)};
@@ -372,13 +378,19 @@ const Transcribe = () => {
 					<Col lg={24}>
 						{!loading && (
 							<ImageWrapper>
-								<ImageOverlay>
-									<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
-										<ListIcon type="zoom-in" />
-										View Larger Image
-									</LinkWrapper>
-								</ImageOverlay>
-								<Image inversion={inversion} src={data.url} alt="" />
+								{data.isImage ? (
+									<React.Fragment>
+										<ImageOverlay>
+											<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
+												<ListIcon type="zoom-in" />
+												View Larger Image
+											</LinkWrapper>
+										</ImageOverlay>
+										<Image inversion={inversion} src={data.url} alt="" />
+									</React.Fragment>
+								) : (
+									<Iframe src={data.url} />
+								)}
 							</ImageWrapper>
 						)}
 					</Col>
