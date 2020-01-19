@@ -195,8 +195,14 @@ const Transcribe = () => {
 								<li>{`Copy and paste the RAW JSON output from tjl.co into the box below and click submit. The raw JSON is everything between the { and } curly brackets, including those brackets themselves.`}</li>
 								<li>
 									All puzzle pieces should be transcribed as they appear when the room's entrance is behind the player.
-									You can easily verify the image rotation by using the outer pillars as landmarks. [See this rotation
-									landmarks guide]
+									You can easily verify the image rotation by using the outer pillars as landmarks.
+									<a
+										href="https://cdn.discordapp.com/attachments/667600349225287680/668240692916781096/unknown.png"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										[See this rotation landmarks guide]
+									</a>
 								</li>
 							</ul>
 						</Card>
