@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { baseline } from "../../theme/themeFunctions";
 
 const CardTypes = {
+	flag: "#a62935",
 	common: "#3A5630",
 	rare: "#3B6D98",
 	legendary: "#281934",
