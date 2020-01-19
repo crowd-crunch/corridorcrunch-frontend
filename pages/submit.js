@@ -50,6 +50,10 @@ const Submit = () => {
 	return (
 		<div>
 			<BaseLayout title="Submit">
+				<Row type="flex" justify="center">
+					Image submission is still in development. Please keep transcribing until this is ready.
+				</Row>
+
 				<ContentRow type="flex" justify="start" gutter={[16, { xs: 8, sm: 16, md: 24, lg: 36 }]}>
 					<Col sm={24} lg={12}>
 						<Card title="A strange sequence" description="Quest Step" type="legendary">
@@ -85,7 +89,6 @@ const Submit = () => {
 						</Card>
 					</Col>
 				</ContentRow>
-
 				<ContentRow type="flex" gutter={[16, { xs: 8, sm: 16, md: 24, lg: 36 }]}>
 					<Col sm={24} lg={12}>
 						<Card title="URL submission" type="legendary">

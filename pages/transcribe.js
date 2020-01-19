@@ -126,16 +126,6 @@ const ValidationMessage = styled.div`
 	margin-bottom: ${baseline(-2)};
 `;
 
-// Mocking the image data from an API until this is able hooked up
-const MockImageData = {
-	id: "0037",
-	url:
-		"https://cdn.discordapp.com/attachments/666873697763590144/667306014680547339/tiger_release_final_20200116_165011.png",
-	confidenceScore: 70,
-	totalTranscriptions: 8,
-	isFlagged: true
-};
-
 const defaultFlags = {
 	badQuality: false,
 	isRotated: false
@@ -280,7 +270,7 @@ const Transcribe = () => {
 								</ListIconWrapper>
 								<strong>{`${data.transCount}`}</strong>
 							</ListItem>
-							{MockImageData.isFlagged && (
+							{data.rotatedimages.length > 0 && (
 								<ListItem style={{ width: "100%" }}>
 									<ListIconWrapper>
 										<ListIcon type="flag" theme="filled" style={{ color: "#a62935" }} />
