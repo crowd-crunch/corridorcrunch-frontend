@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import styled from "styled-components";
 import { Col, Row, Icon, Input, Slider } from "antd";
 import { useFormik } from "formik";
@@ -23,10 +22,34 @@ const ContentRow = styled(Row)`
 `;
 
 const ImageWrapper = styled.div`
+	position: relative;
 	margin-top: ${baseline(1)};
 
 	@media ${breakpoints.medium} {
 		margin-top: 0;
+	}
+`;
+
+const ImageOverlay = styled.div`
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	z-index: 2;
+	background: rgba(0, 0, 0, 0.4);
+	border: 1px solid #d2d2d2;
+	border-top: none;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding: ${baseline(0.5)};
+
+	@media ${breakpoints.medium} {
+		width: 50%;
 	}
 `;
 
@@ -77,6 +100,13 @@ const ListIconWrapper = styled.span`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+`;
+
+const LinkWrapper = styled.a`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
 `;
 
 const ListIcon = styled(Icon)`
@@ -175,14 +205,14 @@ const Transcribe = () => {
 							<p>Current sequence information:</p>
 							<ListItem>
 								<ListIconWrapper>
-									<ListIcon type="safety-certificate" theme="filled" style={{ paddingRight: baseline(1) }} />
+									<ListIcon type="safety-certificate" theme="filled" />
 									<ListItemTitle>Confidence Score:</ListItemTitle>
 								</ListIconWrapper>
 								<strong>{`${MockImageData.confidenceScore}%`}</strong>
 							</ListItem>
 							<ListItem>
 								<ListIconWrapper>
-									<ListIcon type="eye" theme="filled" style={{ paddingRight: baseline(1) }} />
+									<ListIcon type="eye" theme="filled" />
 									<ListItemTitle>Total Transcriptions:</ListItemTitle>
 								</ListIconWrapper>
 								<strong>{`${MockImageData.totalTranscriptions}`}</strong>
@@ -276,6 +306,12 @@ const Transcribe = () => {
 				<ContentRow>
 					<Col lg={24}>
 						<ImageWrapper>
+							<ImageOverlay>
+								<LinkWrapper href={MockImageData.url} target="_blank" rel="noopener noreferrer">
+									<ListIcon type="zoom-in" />
+									View Larger Image
+								</LinkWrapper>
+							</ImageOverlay>
 							<Image inversion={inversion} src={MockImageData.url} alt="" />
 						</ImageWrapper>
 					</Col>
