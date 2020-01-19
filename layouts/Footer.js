@@ -16,6 +16,7 @@ const Root = styled(Row)`
 		padding: 0 ${baseline(3)};
 		position: fixed;
 		bottom: 0;
+		z-index: 9999;
 	}
 `;
 
