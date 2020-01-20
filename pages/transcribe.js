@@ -221,24 +221,31 @@ const Transcribe = () => {
 
 	const onSubmit = ({ sequence }, formikBag) => {
 		const s = JSON.parse(sequence);
-		const body = {
+		let body = {
 			bad_image: additionalFlags.badQuality,
 			...(additionalFlags.isRotated && { orientation: "wrong" }),
-			puzzlePiece: data.id,
-			center: s.center,
-			wall1: s.walls[0],
-			wall2: s.walls[1],
-			wall3: s.walls[2],
-			wall4: s.walls[3],
-			wall5: s.walls[4],
-			wall6: s.walls[5],
-			link1: s.nodes[0].join(""),
-			link2: s.nodes[1].join(""),
-			link3: s.nodes[2].join(""),
-			link4: s.nodes[3].join(""),
-			link5: s.nodes[4].join(""),
-			link6: s.nodes[5].join("")
+			puzzlePiece: data.id
 		};
+		if (!additionalFlags.badQuality) {
+			body = {
+				bad_image: additionalFlags.badQuality,
+				...(additionalFlags.isRotated && { orientation: "wrong" }),
+				puzzlePiece: data.id,
+				center: s.center,
+				wall1: s.walls[0],
+				wall2: s.walls[1],
+				wall3: s.walls[2],
+				wall4: s.walls[3],
+				wall5: s.walls[4],
+				wall6: s.walls[5],
+				link1: s.nodes[0].join(""),
+				link2: s.nodes[1].join(""),
+				link3: s.nodes[2].join(""),
+				link4: s.nodes[3].join(""),
+				link5: s.nodes[4].join(""),
+				link6: s.nodes[5].join("")
+			};
+		}
 		formikBag.setSubmitting(true);
 		fetch("api/submit-sequence", {
 			body: JSON.stringify(body),
