@@ -11,11 +11,5 @@ export default (req, res) => {
 			.then(data => {
 				res.status(200).json(data);
 			});
-	} else if (req.method === "GET") {
-		fetch("http://corridorcrunch.com/api/pieces/get_random")
-			.then(r => r.json())
-			.then(data => {
-				res.status(200).json(data);
-			});
 	}
 };

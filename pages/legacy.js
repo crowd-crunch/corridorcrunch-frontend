@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Row, Col, Icon } from "antd";
 
 import BaseLayout from "../layouts/BaseLayout";
-import { baseline, breakpoints } from "../theme/themeFunctions";
+import { baseline } from "../theme/themeFunctions";
 
 const ListItem = styled.div`
 	width: 100%;

@@ -135,6 +135,34 @@ const SliderTitle = styled.h4`
 	margin-bottom: 0;
 `;
 
+const ExternalImage = styled.div`
+	border: 1px solid #d2d2d2;
+	border-radius: 3px;
+	width: 100%;
+	margin: ${baseline(1)};
+	padding: ${baseline(1)};
+	background: #232323;
+
+	@media ${breakpoints.medium} {
+		width: 50%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+`;
+
+const ExternalImageTitle = styled.div`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-bottom: ${baseline(0.5)};
+	color: #b78c25;
+`;
+
+const ExternalImageIcon = styled(Icon)`
+	font-size: 1.8rem;
+	margin-right: ${baseline(1)};
+`;
+
 const defaultFlags = {
 	badQuality: false,
 	isRotated: false
@@ -149,6 +177,7 @@ const defaultData = {
 const Transcribe = () => {
 	const [data, setData] = useState(defaultData);
 	const [loading, setLoading] = useState(true);
+	const [isReporting, setReporting] = useState(false);
 	const [inversion, setInversion] = useState(0);
 	const [brightness, setBrightness] = useState(1);
 	const [contrast, setContrast] = useState(100);
@@ -170,10 +199,23 @@ const Transcribe = () => {
 
 	const fetchImage = () => {
 		setLoading(true);
-		fetch("/api/image")
+		fetch("api/get-sequence")
 			.then(res => res.json())
 			.then(setData)
 			.then(() => setLoading(false))
+			.catch(console.log);
+	};
+
+	const reportImage = () => {
+		setReporting(true);
+		fetch("api/report-sequence", {
+			body: JSON.stringify({ imageID: data.id }),
+			method: "POST",
+			headers: { "Content-Type": "application/json" }
+		})
+			.then(res => res.json())
+			.then(fetchImage)
+			.then(setReporting(false))
 			.catch(console.log);
 	};
 
@@ -198,7 +240,11 @@ const Transcribe = () => {
 			link6: s.nodes[5].join("")
 		};
 		formikBag.setSubmitting(true);
-		fetch("/api/image", { body: JSON.stringify(body), method: "POST", headers: { "Content-Type": "application/json" } })
+		fetch("api/submit-sequence", {
+			body: JSON.stringify(body),
+			method: "POST",
+			headers: { "Content-Type": "application/json" }
+		})
 			.then(res => res.json())
 			.then(() => {
 				formikBag.resetForm();
@@ -400,7 +446,9 @@ const Transcribe = () => {
 							<Button type="primary" onClick={fetchImage}>
 								Display New Image
 							</Button>
-							{false && <Button type="negative">Report Current Image</Button>}
+							<Button type="negative" onClick={reportImage} isDisabled={!data.id || isReporting}>
+								Report Current Image
+							</Button>
 						</Actions>
 					</Col>
 				</ContentRow>
@@ -408,13 +456,35 @@ const Transcribe = () => {
 					<Col lg={24}>
 						{!loading && (
 							<ImageWrapper>
-								<ImageOverlay>
-									<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
-										<ListIcon type="zoom-in" />
-										View Larger Image
-									</LinkWrapper>
-								</ImageOverlay>
-								<Image inversion={inversion} brightness={brightness} contrast={contrast} src={data.url} alt="" />
+								{data.isImage && (
+									<span>
+										<ImageOverlay>
+											<LinkWrapper href={data.url} target="_blank" rel="noopener noreferrer">
+												<ListIcon type="zoom-in" />
+												View Larger Image
+											</LinkWrapper>
+										</ImageOverlay>
+										<Image inversion={inversion} brightness={brightness} contrast={contrast} src={data.url} alt="" />
+									</span>
+								)}
+								{!data.isImage && (
+									<ExternalImage>
+										<ExternalImageTitle>
+											<ExternalImageIcon type="flag" theme="filled" />
+											<span>External Image</span>
+										</ExternalImageTitle>
+										<p>Looks like this submission is hosted on an external site.</p>
+										<p>Please click below to view it.</p>
+										<a
+											href={data.url}
+											target="_blank"
+											rel="noopener noreferrer"
+											style={{ display: "block", textAlign: "center" }}
+										>
+											<Button type="primary">View External Image</Button>
+										</a>
+									</ExternalImage>
+								)}
 							</ImageWrapper>
 						)}
 					</Col>

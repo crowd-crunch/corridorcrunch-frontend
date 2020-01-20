@@ -23,6 +23,11 @@ const Root = styled(CoreButton)`
 		}
 	}
 
+	:disabled {
+		background-color: #232323;
+		color: #d2d2d2;
+	}
+
 	${props =>
 		props.type === "primary" &&
 		`
@@ -56,11 +61,11 @@ const Root = styled(CoreButton)`
 `;
 
 const Button = props => {
-	const { children, to, onClick, type = "primary", htmlType = "button" } = props;
+	const { children, to, onClick, type = "primary", htmlType = "button", isDisabled = false } = props;
 	const content = to ? <Link href={to}>{children}</Link> : children;
 
 	return (
-		<Root onClick={onClick} type={type} htmlType={htmlType}>
+		<Root onClick={onClick} type={type} htmlType={htmlType} disabled={isDisabled}>
 			{content}
 		</Root>
 	);
